@@ -14,12 +14,60 @@ extern "C" {
 #include <libavfilter/avfilter.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
-#include "3rdparty/ffmpeg/include/libavutil/frame.h"
+#include "libavutil/frame.h"
 #include <libswresample/swresample.h>
 
 #define OUTPUT_CHANNELS 2
 
 int64_t lastReadPacketTime;
+
+//视频帧自定义结构体
+typedef struct VideoFrame {
+    int width;
+    int height;
+    float position;
+    int format;
+    unsigned char *data;
+
+    VideoFrame() {
+        width = 0;
+        height = 0;
+        position = -1;
+        format = -1;
+        data = NULL;
+    }
+
+    ~VideoFrame() {
+        if (data == NULL) {
+            free(data);
+            data = NULL;
+        }
+    }
+} VideoFrame;
+
+//音频帧自定义结构体
+typedef struct AudioPacket {
+    float position;
+    short *samples;
+    int channel;
+    int sampleRate;
+    int format;
+
+    AudioPacket() {
+        position = -1;
+        sampleRate = 0;
+        format = -1;
+        samples = NULL;
+    }
+
+    ~AudioPacket() {
+        if (sampleRate == NULL) {
+            free(samples);
+            samples = NULL;
+        }
+
+    }
+} AudioPacket;
 
 class VideoDecoder {
 private:
