@@ -7,7 +7,9 @@ include_directories(3rdparty/ffmpeg/include)
 
 add_library(NativeVideoPlayer SHARED
         NativeVideoPlayer.cpp
-        VideoDecoder.cpp)
+        VideoDecoder.cpp
+        AudioOutput.cpp
+        )
 
 ####################添加ffmpeg库####################
 add_library(avformat-57 SHARED IMPORTED)
@@ -51,6 +53,8 @@ target_link_libraries(NativeVideoPlayer avutil-55)
 target_link_libraries(NativeVideoPlayer swscale-4)
 ####################添加ffmpeg库####################
 
+#链接OpenSLES
+target_link_libraries(NativeVideoPlayer OpenSLES)
 
 find_library(log-lib log)
 
